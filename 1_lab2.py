@@ -16,13 +16,13 @@ def record(model_name, answer):
     display(Markdown(answer))
 
 
-bash_path = "/c/jpsp/agentic_AI/agents/.env"
+#bash_path = "/c/jpsp/agentic_AI/agents/.env"
 # Convert "/c/users/..." to "C:/users/..." if on Windows
-if bash_path.startswith("/") and bash_path[2] == "/":
-    drive_letter = bash_path[1].upper()
-    standard_path = f"{drive_letter}:{bash_path[2:]}"
-else:
-    standard_path = bash_path
+#if bash_path.startswith("/") and bash_path[2] == "/":
+#    drive_letter = bash_path[1].upper()
+#    standard_path = f"{drive_letter}:{bash_path[2:]}"
+#else:
+#    standard_path = bash_path
 
 #load_dotenv(dotenv_path=standard_path,override=True)
 load_dotenv(override=True)
