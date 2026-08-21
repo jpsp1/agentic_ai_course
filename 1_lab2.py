@@ -35,6 +35,15 @@ groq_api_key = os.getenv('GROQ_API_KEY')
 grok_api_key = os.getenv('GROK_API_KEY')
 openrouter_api_key = os.getenv('OPENROUTER_API_KEY')
 
+print(openai_api_key)
+print(anthropic_api_key)
+print(google_api_key)
+print(deepseek_api_key)
+print(groq_api_key)
+print(grok_api_key)
+print(openrouter_api_key)
+
+
 if openai_api_key:
     print(f"OpenAI API Key exists and begins {openai_api_key[:8]}")
 else:
@@ -128,28 +137,44 @@ messages = [{"role": "user", "content": question}]
 
 model_name = "gpt-5.4-nano"
 print(model_name)
-response = openai.chat.completions.create(model=model_name, messages=messages, reasoning_effort="none")
-answer = response.choices[0].message.content
 
-record(model_name, answer)
+try:
+    response = openai.chat.completions.create(model=model_name, messages=messages, reasoning_effort="none")    
+except Exception as e: 
+    print(f"erro:{e}")    
+else:
+    answer = response.choices[0].message.content
+    record(model_name, answer)
+    print("ok\n\n")
 
 model_name = "gemini-3.1-flash-lite"
 print(model_name)
 
-response = gemini.chat.completions.create(model=model_name, messages=messages)
-answer = response.choices[0].message.content
+try:
+    response = gemini.chat.completions.create(model=model_name, messages=messages)
+except Exception as e: 
+    print(f"erro:{e}")    
+else:
+    answer = response.choices[0].message.content
+    record(model_name, answer)
+    print("ok\n\n")
 
 record(model_name, answer)
 
 #model_name = "moonshotai/kimi-k2.6"
 model_name = "nvidia/nemotron-3-ultra-550b-a55b:free"
 print(model_name)
-response = openrouter.chat.completions.create(model=model_name, messages=messages)
-answer = response.choices[0].message.content
+try:
+    response = openrouter.chat.completions.create(model=model_name, messages=messages)
+except Exception as e: 
+    print(f"erro:{e}")    
+else:
+    if response.choices[0]!=None:
+        answer = response.choices[0].message.content
+        record(model_name, answer)
+        print("ok\n\n")
 
-record(model_name, answer)
-
-if 0==0:
+if 0==1:    
     ##################ollama
     requests.get('http://localhost:11434').content
 
@@ -212,11 +237,12 @@ judge_messages = [{"role": "user", "content": judge}]
 #####################
 # Judgement time!
 
-
-
-response = openai.chat.completions.create(model="gpt-5.4-mini", messages=judge_messages)
-response = response.choices[0].message.content
-answer = response.choices[0].message.content
-print(answer)
-
+try:
+    response = openai.chat.completions.create(model="gpt-5.4-mini", messages=judge_messages)
+except Exception as e: 
+    print(f"erro:{e}")    
+else:
+    if response.choices[0]!=None:
+        answer = response.choices[0].message.content
+        print(answer)
 
