@@ -24,7 +24,8 @@ if bash_path.startswith("/") and bash_path[2] == "/":
 else:
     standard_path = bash_path
 
-load_dotenv(dotenv_path=standard_path,override=True)
+#load_dotenv(dotenv_path=standard_path,override=True)
+load_dotenv(override=True)
 
 openai_api_key = os.getenv('OPENAI_API_KEY')
 anthropic_api_key = os.getenv('ANTHROPIC_API_KEY')
@@ -217,4 +218,5 @@ response = openai.chat.completions.create(model="gpt-5.4-mini", messages=judge_m
 response = response.choices[0].message.content
 answer = response.choices[0].message.content
 print(answer)
+
 
