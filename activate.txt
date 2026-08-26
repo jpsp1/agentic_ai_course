@@ -1,3 +1,4 @@
-activate software environment at other directory:
+#activate software environment at other directory:
+#run these 
 
 source ../../agents/.venv/bin/activate
