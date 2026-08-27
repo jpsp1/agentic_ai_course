@@ -8,10 +8,33 @@ import gradio as gr
 import json
 
 
-def chat(message, history):
+#not used anymore:
+def chat_v1(message, history):
     messages = [{"role": "system", "content": system_prompt}] + history + [{"role": "user", "content": message}]
     response = openai.chat.completions.create(model="gpt-5.4-mini", messages=messages)
     return response.choices[0].message.content
+
+def chat(message, history):
+    messages = [{"role": "system", "content": system_prompt}] + history + [{"role": "user", "content": message}]
+    response = openai.chat.completions.create(model="gpt-5.4-mini", messages=messages, tools=tools)
+         
+    if response.choices[0].finish_reason=="tool_calls":
+            message = response.choices[0].message
+            tool_call = message.tool_calls[0]
+            email = json.loads(tool_call.function.arguments).get("email")
+            record_email_tool(email)
+            messages.append(message)
+            messages.append({"role": "tool", "content": "Email recorded", "tool_call_id": tool_call.id})
+            response = openai.chat.completions.create(model="gpt-5.4-mini", messages=messages, tools=tools)
+            
+    return response.choices[0].message.content
+
+    
+def record_email_tool(email):
+    print(f"Tool called to record an email: {email}")
+    with open("emails.txt", "a", encoding="utf-8") as f:
+        f.write(email + "\n")
+    return "Email received"
 
 ############
 load_dotenv(override=True)
@@ -105,3 +128,23 @@ print(response.choices[0].message.content)
 
 
 chat("Please summarize who you are", [])
+
+print("will open a chat interface in your browser. You can ask questions about the person whose digital twin you are talking to. ")
+
+# To create a public link, set `share=True` in `launch()`.
+#gr.ChatInterface(chat).launch(inbrowser=True)
+
+record_email_tool_json = {
+    "name": "record_email_tool",
+    "description": "Use this tool to record that a user provided their email address",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "email": {"type": "string", "description": "The email address of this user"}
+        },
+        "required": ["email"],
+        "additionalProperties": False
+    }
+}
+
+tools = [{"type": "function", "function": record_email_tool_json}]
