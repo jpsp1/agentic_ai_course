@@ -1,17 +1,8 @@
-# agentic_ai_course
-4-ago-2026
+labs and stuff related to the
+ agentic_ai_course
+ AI Engineer Agentic Track: The Complete Agent & MCP Course
+https://fccn.udemy.com/course/the-complete-agentic-ai-engineering-course/
 
----------------- notes
-
-$ git push -u origin main
-
------------- upload
-
-#!/bin/bash
-d=`date`
-#$ git config user.email "joao.pagaime@gmail.com"
-git commit -m "updates a $d" -a
-git push -u origin main
 
 ------------------ project files and folders
 README.md - this file
