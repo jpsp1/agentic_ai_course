@@ -14,7 +14,8 @@ def chat_v1(message, history):
     response = openai.chat.completions.create(model="gpt-5.4-mini", messages=messages)
     return response.choices[0].message.content
 
-def chat(message, history):
+#not used anymore:
+def chat_v2(message, history):    
     messages = [{"role": "system", "content": system_prompt}] + history + [{"role": "user", "content": message}]
     response = openai.chat.completions.create(model="gpt-5.4-mini", messages=messages, tools=tools)
          
@@ -29,7 +30,19 @@ def chat(message, history):
             
     return response.choices[0].message.content
 
-    
+def chat(message, history):
+    messages = [{"role": "system", "content": system_prompt}] + history + [{"role": "user", "content": message}]
+    response = openai.chat.completions.create(model="gpt-5.4-mini", messages=messages, tools=tools)         
+    while response.choices[0].finish_reason=="tool_calls":
+            message = response.choices[0].message
+            messages.append(message)
+            for tool_call in message.tool_calls:
+                email = json.loads(tool_call.function.arguments).get("email")
+                record_email_tool(email)
+                messages.append({"role": "tool", "content": "Email recorded", "tool_call_id": tool_call.id})
+            response = openai.chat.completions.create(model="gpt-5.4-mini", messages=messages, tools=tools)
+            
+    return response.choices[0].message.content
 def record_email_tool(email):
     print(f"Tool called to record an email: {email}")
     with open("emails.txt", "a", encoding="utf-8") as f:
@@ -126,13 +139,7 @@ display(Markdown(response.choices[0].message.content))
 print(response.choices[0].message.content)
 
 
-
-chat("Please summarize who you are", [])
-
-print("will open a chat interface in your browser. You can ask questions about the person whose digital twin you are talking to. ")
-
-# To create a public link, set `share=True` in `launch()`.
-#gr.ChatInterface(chat).launch(inbrowser=True)
+#chat("Please summarize who you are", [])
 
 record_email_tool_json = {
     "name": "record_email_tool",
@@ -146,5 +153,11 @@ record_email_tool_json = {
         "additionalProperties": False
     }
 }
-
 tools = [{"type": "function", "function": record_email_tool_json}]
+
+print("will open a chat interface in your browser. You can ask questions about the person whose digital twin you are talking to. ")
+
+# To create a public link, set `share=True` in `launch()`.
+# example output: Running on public URL: https://e5ea91dadee15a7d3b.gradio.live
+
+gr.ChatInterface(chat).launch(inbrowser=True,share=True)
