@@ -1,3 +1,4 @@
+#derived from https://udemy.com/course/the-complete-agentic-ai-engineering-course/
 # https://github.com/ed-donner/agents/blob/main/1_foundations/2_lab2.ipynb
 # Start with imports - ask the Cursor Agent to explain any package that you don't know
 

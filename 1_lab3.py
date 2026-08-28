@@ -1,3 +1,4 @@
+#derived from https://udemy.com/course/the-complete-agentic-ai-engineering-course/
 # If you don't know what any of these packages do - you can always ask ChatGPT for a guide!
 
 from dotenv import load_dotenv

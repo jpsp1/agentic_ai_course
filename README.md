@@ -1,7 +1,7 @@
 labs and stuff related to the
  agentic_ai_course
  AI Engineer Agentic Track: The Complete Agent & MCP Course
-https://fccn.udemy.com/course/the-complete-agentic-ai-engineering-course/
+https://udemy.com/course/the-complete-agentic-ai-engineering-course/
 
 
 ------------------ project files and folders
