@@ -1,3 +1,4 @@
+#derived from https://udemy.com/course/the-complete-agentic-ai-engineering-course/
 # imports
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -36,6 +37,33 @@ def handle_tool_calls_with_manual_if(tool_calls):
 
         results.append({"role": "tool","content": json.dumps(result),"tool_call_id": tool_call.id})
     return results
+
+# This gives us a more elegant way that avoids the IF statement.
+
+def handle_tool_calls(tool_calls):
+    results = []
+    for tool_call in tool_calls:
+        tool_name = tool_call.function.name
+        arguments = json.loads(tool_call.function.arguments)
+        print(f"Tool called: {tool_name}", flush=True)
+        tool = globals().get(tool_name)
+        result = tool(**arguments) if tool else "No tool found"
+        results.append({"role": "tool","content": json.dumps(result),"tool_call_id": tool_call.id})
+    return results
+
+def chat(message, history):
+    messages = [{"role": "system", "content": system_prompt}] + history + [{"role": "user", "content": message}]
+    response = openai.chat.completions.create(model="gpt-5.4-mini", messages=messages, tools=tools)
+    while response.choices[0].finish_reason=="tool_calls":
+        message = response.choices[0].message
+        tool_calls = message.tool_calls
+        results = handle_tool_calls(tool_calls)
+        messages.append(message)
+        messages.extend(results)
+        response = openai.chat.completions.create(model="gpt-5.4-mini", messages=messages, tools=tools)
+    return response.choices[0].message.content
+
+
 # The usual start
 
 load_dotenv(override=True)
@@ -97,3 +125,54 @@ record_unknown_question_json = {
 tools = [{"type": "function", "function": record_user_details_json},
         {"type": "function", "function": record_unknown_question_json}]
 
+# calls "record_unknown_question"
+#globals()["record_unknown_question"]("this is a really hard question")
+
+reader = PdfReader("twin/linkedin.pdf")
+linkedin = ""
+for page in reader.pages:
+    text = page.extract_text()
+    if text:
+        linkedin += text
+
+with open("twin/summary.txt", "r", encoding="utf-8") as f:
+    summary = f.read()
+
+system_prompt = f"""
+
+# Your role
+
+You are a digital twin running on a website, chatting with visitors of the website.
+You represent the person who's website you are on.
+You answer questions related to their career, background, skills and experience.
+
+Here are the details of the person you are representing:
+
+{summary}
+
+If asked, you explain clearly that you are an AI that is the digital twin of this person.
+
+# Context
+
+Here is a summary of the person's LinkedIn profile so that you can answer questions:
+
+{linkedin}
+
+# Rules
+
+Engage with the user. Be professional and engaging, as if talking to a potential client or future employer who came across the website.
+Only answer questions related to career, background, skills and experience.
+If the user asks about something unrelated, then steer the conversation back to professional topics.
+
+Always stay in character as the digital twin of the person you are representing. Represent the person.
+
+If the user would like to get in touch, then ask for their email, and use your tool to record their email for follow-up.
+
+IMPORTANT:
+If you don't know the answer, use your tool to record the question, and then tell the user that you don't know. Never make up an answer.
+"""
+
+# To create a public link, set `share=True` in `launch()`.
+# example output: Running on public URL: https://e5ea91dadee15a7d3b.gradio.live
+
+gr.ChatInterface(chat).launch(inbrowser=True,share=True)

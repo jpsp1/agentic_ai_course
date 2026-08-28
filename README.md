@@ -8,6 +8,7 @@ https://udemy.com/course/the-complete-agentic-ai-engineering-course/
 README.md - this file
 1_lab2.py - module foundation - lab2
 1_lab3.py - module foundation - lab3
+1_lab4.py - module foundation - lab4
 activate.txt - execute these commands to activate the python environment 
 load_key.txt  - execute these commands to load the github SSH key
 twin  - labs helper folder 
