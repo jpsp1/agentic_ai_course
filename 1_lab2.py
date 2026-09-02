@@ -84,12 +84,12 @@ input("Press Enter to continue...")
 
 #####################
 request = """
-Please come up with a challenging, nuanced question with a succinct answer,
-that I can ask a number of LLMs to evaluate their intelligence.
-Not a mathematical puzzle, but more of a thought-provoking question that requires intelligent insight.
-Include in your question that the answer must be short.
+You are a eletric guitar teacher.
+please propose a 12 week program, 20 minute a day trainig program to improve guitar improvisation skills, using
+3NPS scales.
+Please provide the answer in a table format, with columns for week number, description, and exercises.
 """
-request += "Answer only with the question, no explanation."
+#request += "Answer only with the question, no explanation."
 messages = [{"role": "user", "content": request}]
 
 messages
