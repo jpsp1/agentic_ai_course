@@ -26,7 +26,7 @@ def chat(message, history):
         response = openai.chat.completions.create(model=MODEL_NAME, messages=messages, tools=tools)
     return response.choices[0].message.content
 
-
+#).launch(css=CSS, js=JS, theme=gr.themes.Base(), share=True,server_name='0.0.0.0')
 if __name__ == "__main__":
     gr.ChatInterface(
         chat,
@@ -34,4 +34,4 @@ if __name__ == "__main__":
         title="Digital Twin",
         description="Talk to my AI twin about my career",
         chatbot=gr.Chatbot(show_label=False),
-    ).launch(css=CSS, js=JS, theme=gr.themes.Base(), share=True)
+    ).launch(css=CSS, js=JS, theme=gr.themes.Base(), server_name='0.0.0.0')
