@@ -24,19 +24,43 @@ async def main_v2():
     print(result.to_input_list())
 
 
-async def main():
+async def main_v3():
     agent = Agent(name="Jokester", instructions="You are a joke teller", model="gpt-5.4-mini")    
     # Streaming
     result = Runner.run_streamed(agent, input="Please tell me 5 jokes about AI Agents.")
     async for event in result.stream_events():
         if event.type == "raw_response_event" and isinstance(event.data, ResponseTextDeltaEvent):
             print(event.data.delta, end="", flush=True)
-# Remember this?
+ 
+async def main_v4():
+    #look at the trace
+    #https://platform.openai.com/traces
+    with trace("Pizza has arrived"):
+        result = await Runner.run(notifier, "Notify the user that the pizza is here")
+    print(result.final_output)
 
-def push(message):
+async def main_v5():
+    #history. memory. conversation. context. whatever you want to call it.
+    agent = Agent(name="agent name", model="gpt-5.4-mini")
+    response = await Runner.run(agent, "Hi there. My name is Joao.")
+    print(response.final_output)
+    next_input = response.to_input_list() + [{"role": "user", "content": "What's my name?"}]
+    response = await Runner.run(agent, next_input)
+    print(response.final_output)      
+
+def push_v1(message):
     print(f"Push: {message}")
     payload = {"user": pushover_user, "token": pushover_token, "message": message}
     requests.post(pushover_url, data=payload)
+
+# Now this:
+
+@function_tool
+def push_tool(message: str) -> str:
+    """ Send the given message to the user as a push notification """
+    payload = {"user": pushover_user, "token": pushover_token, "message": message}
+    result = requests.post(pushover_url, data=payload).status_code
+    return f"Push sent with API status code {result}"
 
 load_dotenv(override=True)
 # o comando await só pode ser usado dentro de funções assíncronas
@@ -65,9 +89,32 @@ if pushover_token:
 else:
     print("Pushover token not found")
 
-push("HEY!!")
+#print(push_tool)
+#FunctionTool(name='push_tool', 
+#description='Send the given message to the user as a push notification',
+# params_json_schema={'properties': {'message':
+# {'title': 'Message', 'type': 'string'}},
+# 'required': ['message'], 'title': 'push_tool_args', ...
 
-sys.exit(0)
+#push_tool.description
+#push("HEY!!")
+
+
+
+
+#notifier = Agent(name="Notifier", model="gpt-5.4-mini", 
+#    instructions="You notify the user upon request", 
+#    tools=[push_tool])
+
+async def main():
+    session = SQLiteSession("12346")
+    #history. memory. conversation. context. whatever you want to call it.
+    agent = Agent(name="agent name", model="gpt-5.4-mini")
+    response = await Runner.run(agent, "Hi there. My name is Joao.",session=session)
+    print(response.final_output)
+    response = await Runner.run(agent, "What's my name?", session=session)    
+    print(response.final_output)      
+
 
 # Executa a função assíncrona
 
