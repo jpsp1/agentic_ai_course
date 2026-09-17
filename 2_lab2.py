@@ -135,7 +135,7 @@ Do not proceed until all three drafts are ready, one from each tool.
 3. Use your tool to send the best email (and only the best email) to the user. Only send 1 email.
 """
 
-sales_manager = Agent(name="Sales Manager", instructions=instructions, tools=tools, model=MODEL_NAME)
+
 
 
 sales_agent1 = Agent(name="Professional Sales Agent", instructions=instructions1, model=MODEL_NAME)
@@ -169,7 +169,7 @@ tool3 = sales_agent3.as_tool(tool_name="sales_email_writer_3", tool_description=
 tools = [tool1, tool2, tool3, send_email_tool]
 
 
-
+sales_manager = Agent(name="Sales Manager", instructions=instructions, tools=tools, model=MODEL_NAME)
 
 async def main_old():
     result = Runner.run_streamed(sales_agent1, input="Write a cold sales email")
