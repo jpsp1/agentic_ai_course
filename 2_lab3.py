@@ -5,7 +5,7 @@ import os
 from pydantic import BaseModel, Field
 import requests
 import asyncio
-
+import sys
 
 USE_EMAIL=False
 
@@ -54,7 +54,7 @@ class EmailReview(BaseModel):
     number_of_sentences: int = Field(description="The number of sentences in the body of the email, not including the greeting and signature")
     contains_placeholders: bool = Field(description="Whether the email contains placeholders for personalization")
 
-    
+
 load_dotenv(override=True)
 
 openai_api_key = os.getenv('OPENAI_API_KEY')
@@ -120,6 +120,16 @@ tool3 = sales_agent3.as_tool(tool_name="sales_agent3", tool_description=descript
 
 #tool3 = sales_agent3.as_tool(tool_name="sales_agent3", tool_description=description)
 
+email = """
+Hi [first_name],
+
+I'm hitting you up to see if you'd like to buy our product. It's really great. You'll miss out if you don't buy it.
+
+Laters.
+
+Ed
+"""
+
 pushover_user = os.getenv("PUSHOVER_USER")
 pushover_token = os.getenv("PUSHOVER_TOKEN")
 pushover_url = "https://api.pushover.net/1/messages.json"
@@ -165,11 +175,18 @@ Do not proceed until all three drafts are ready, one from each tool.
 sales_manager = Agent(name="Sales Manager", instructions=instructions, tools=tools, model="gpt-5.4-mini")
 
 
-async def main():
+
+async def main_v20260918():
     with trace("Sales Manager across different models"):
         result = await Runner.run(sales_manager, task)
     print(result.final_output)
 
+
+async def main():
+    checker = Agent(name="Checker", instructions="You review potential sales emails", model="gpt-5.4-mini", output_type=EmailReview)
+    result = await Runner.run(checker, email)
+    review = result.final_output
+    print(result, review)
 
 if __name__ == "__main__":
     asyncio.run(main())
