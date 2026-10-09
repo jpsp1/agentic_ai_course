@@ -150,7 +150,7 @@ if pushover_token:
 else:
     print("Pushover token not found")
 
-send_message("Yet another test", "Hooray!", "<html><body><h1>Hooray!</h1></body></html>")
+#send_message("Yet another test", "Hooray!", "<html><body><h1>Hooray!</h1></body></html>")
 
 #tools = [tool1, tool2, tool3, send_email_tool]
 tools = [tool1, tool2, tool3, send_email_tool]
@@ -174,7 +174,15 @@ Do not proceed until all three drafts are ready, one from each tool.
 
 sales_manager = Agent(name="Sales Manager", instructions=instructions, tools=tools, model="gpt-5.4-mini")
 
+checker = Agent(name="Checker", instructions="You review potential sales emails", model="gpt-5.4-mini", output_type=EmailReview)
 
+
+@output_guardrail
+async def email_guardrail(ctx, agent, message):
+    result = await Runner.run(checker, message, context=ctx.context)
+    review = result.final_output
+    is_problem = review.contains_placeholders or not review.is_professional
+    return GuardrailFunctionOutput(output_info={"review": review},tripwire_triggered=is_problem)
 
 async def main_v20260918():
     with trace("Sales Manager across different models"):
@@ -182,11 +190,24 @@ async def main_v20260918():
     print(result.final_output)
 
 
-async def main():
+async def main_v20260925():
     checker = Agent(name="Checker", instructions="You review potential sales emails", model="gpt-5.4-mini", output_type=EmailReview)
     result = await Runner.run(checker, email)
     review = result.final_output
     print(result, review)
+
+cowboy_instructions = instructions + "\nSpeak like a cowboy"
+
+sales_agent_cowboy = Agent(name="Cowboy", instructions=cowboy_instructions, model=gemini_model, output_guardrails=[email_guardrail])
+cowboy_instructions = instructions + "\nSpeak like a cowboy"
+
+async def main():
+    try:
+        result = await Runner.run(sales_agent_cowboy, "Write a cold sales email")        
+    except Exception as e:
+        print(f"An error occurred: {e}")
+    else:
+        print(result.final_output)
 
 if __name__ == "__main__":
     asyncio.run(main())
