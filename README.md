@@ -1,5 +1,6 @@
 labs and stuff related to the
  Edward Donner's 
+ 2026 learning course
  AI Engineer Agentic Track: The Complete Agent & MCP Course
 https://udemy.com/course/the-complete-agentic-ai-engineering-course/
 
