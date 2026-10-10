@@ -6,24 +6,16 @@ https://udemy.com/course/the-complete-agentic-ai-engineering-course/
 
 <p>
 
------------------- project files and folders
+------------------ project files and folders  
+README.md - this file  
+1_lab2.py - module foundation - lab2  
+1_lab3.py - module foundation - lab3  
+1_lab4.py - module foundation - lab4  
+activate.txt - execute these commands to activate the python environment   
+load_key.txt  - execute these commands to load the github SSH key  
+twin  - labs helper folder   
+upload.sh - sync github / upload to github  
 
-README.md - this file
-
-1_lab2.py - module foundation - lab2
-
-1_lab3.py - module foundation - lab3
-
-1_lab4.py - module foundation - lab4
-
-activate.txt - execute these commands to activate the python environment 
-
-load_key.txt  - execute these commands to load the github SSH key
-
-twin  - labs helper folder 
-
-upload.sh - sync github / upload to github
-
-
+<p>
     João Pagaime, 2026
     https://github.com/jpsp1/agentic_ai_course/blob/main/README.md
