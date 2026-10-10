@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv(override=True)
 
 MODEL_NAME = os.getenv("DEFAULT_MODEL_NAME", "gpt-5.4-mini")
-HOW_MANY_SEARCHES = int(os.getenv("HOW_MANY_SEARCHES", 5))
+HOW_MANY_SEARCHES = int(os.getenv("HOW_MANY_SEARCHES", 2))
 
 
 INSTRUCTIONS = f"""

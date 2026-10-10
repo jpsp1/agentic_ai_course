@@ -4,6 +4,7 @@ labs and stuff related to the
  AI Engineer Agentic Track: The Complete Agent & MCP Course
 https://udemy.com/course/the-complete-agentic-ai-engineering-course/
 
+      
 
 ------------------ project files and folders
 README.md - this file
@@ -14,3 +15,5 @@ activate.txt - execute these commands to activate the python environment
 load_key.txt  - execute these commands to load the github SSH key
 twin  - labs helper folder 
 upload.sh - sync github / upload to github
+
+    João Pagaime, 2026
