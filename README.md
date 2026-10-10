@@ -1,5 +1,5 @@
 labs and stuff related to the
- agentic_ai_course
+ Edward Donner's 
  AI Engineer Agentic Track: The Complete Agent & MCP Course
 https://udemy.com/course/the-complete-agentic-ai-engineering-course/
 
