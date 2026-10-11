@@ -18,5 +18,7 @@ with gr.Blocks() as ui:
     run_button.click(run, inputs=query_textbox, outputs=report)
     query_textbox.submit(run, inputs=query_textbox, outputs=report)
 
-ui.launch(theme=gr.themes.Default(primary_hue="sky"))
+# To create a public link, set `share=True` in `launch()`.
+# example output: Running on public URL: https://e5ea91dadee15a7d3b.gradio.live
+ui.launch(theme=gr.themes.Default(primary_hue="sky"),share=True)
 
