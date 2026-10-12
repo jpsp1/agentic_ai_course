@@ -33,7 +33,7 @@ def train():
     Train the crew for a given number of iterations.
     """
     inputs = {
-        "topic": "Most popular agent frameworks",
+        "topic": "Most popular AI Agent frameworks as of now",
         'current_year': str(datetime.now().year)
     }
     try:
