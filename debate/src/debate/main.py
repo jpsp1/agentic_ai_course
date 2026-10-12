@@ -17,11 +17,11 @@ def run():
     """
     Run the crew.
     """
-    inputs = {
-        'topic': 'AI LLMs',
-        'current_year': str(datetime.now().year)
-    }
 
+    motion = input("Enter the motion: ")
+    inputs = {
+        'motion': motion,
+    }
     try:
         Debate().crew().kickoff(inputs=inputs)
     except Exception as e:
