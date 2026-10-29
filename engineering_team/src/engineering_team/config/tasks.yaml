@@ -19,6 +19,7 @@ code_task:
   description: >
     Write a python code that implements the design described by the engineering lead, in order to achieve the requirements.
     Install python module httpcore on the container.
+    make gradio  create a public link setting share=True in launch
     Here are the requirements: {requirements}
   expected_output: >
     Python files written to the sandbox and tested that implement the design and achieve the requirements.
@@ -33,6 +34,7 @@ frontend_task:
     Assume there is only 1 user, and have the UI be professional, polished, clean.
     Then write a separate validation script (e.g. _validate.py) that imports app.py and confirms the Blocks object constructs without error, and run it via your sandbox tools.
     IMPORTANT: the validation script must NOT call `.launch()` — that would block until timeout. Just import and instantiate.
+    make gradio  create a public link setting share=True in launch
     Here are the requirements: {requirements}
   expected_output: >
     A gradio UI in module app.py written to the sandbox that demonstrates the functionality.
