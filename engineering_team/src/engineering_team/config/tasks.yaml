@@ -18,6 +18,7 @@ design_task:
 code_task:
   description: >
     Write a python code that implements the design described by the engineering lead, in order to achieve the requirements.
+    Install python module httpcore on the container.
     Here are the requirements: {requirements}
   expected_output: >
     Python files written to the sandbox and tested that implement the design and achieve the requirements.
