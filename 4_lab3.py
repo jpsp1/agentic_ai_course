@@ -9,6 +9,7 @@ from langchain_core.tools import tool
 from langgraph.checkpoint.memory import MemorySaver
 from langchain_mcp_adapters.client import MultiServerMCPClient
 import asyncio
+import sys
 
 load_dotenv(override=True)
 
@@ -76,6 +77,29 @@ watched_agent = create_agent(
 )
 
 
+
+if sys.platform == "win32":
+    import subprocess
+    from functools import partial
+    import langchain_mcp_adapters.sessions as mcp_sessions
+
+    mcp_sessions.stdio_client = partial(mcp_sessions.stdio_client, errlog=subprocess.DEVNULL)
+    print("Applied the Windows adjustment")
+else:
+    print("Not Windows, so nothing to do here")
+
+
+client = MultiServerMCPClient({
+    "playwright": {
+        "transport": "stdio",
+        "command": "npx",
+        "args": ["-y", "@playwright/mcp@latest", "--isolated"],
+    }
+})
+
+
+
+
 async def main():    
     if False:
         result = await agent.ainvoke({"messages": [{"role": "user", "content": "In one sentence: why does async code suit agents so well?"}]})
@@ -97,9 +121,24 @@ async def main():
         print(report)
         print("Just the weather:", report.weather)
 
-    result = watched_agent.invoke({"messages": [{"role": "user", "content": "Weather and population of London and Rome?"}]})
-    print("\nFinal answer:", result["messages"][-1].content)
+    if False:
+        result = watched_agent.invoke({"messages": [{"role": "user", "content": "Weather and population of London and Rome?"}]})
+        print("\nFinal answer:", result["messages"][-1].content)
 
+    browser_tools = await client.get_tools()
+    print(f"Loaded {len(browser_tools)} browser tools:")
+    for t in browser_tools:
+        print(" -", t.name)        
+
+    browser_agent = create_agent(
+        model="openai:gpt-5.5",
+        tools=browser_tools,
+        system_prompt="You are a web research assistant. Use the browser tools to complete the task, then report clearly.",
+    )
+
+    result = await browser_agent.ainvoke({"messages": [{"role": "user",
+        "content": "Go to https://news.ycombinator.com and tell me the titles of the top three stories on the front page."}]})
+    print(result["messages"][-1].content)
 # Executa a função assíncrona
 
 if __name__ == "__main__":
