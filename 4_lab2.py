@@ -105,18 +105,102 @@ def translator_node(state: State) -> dict:
 
 builder = StateGraph(State)
 
+if False:
+    builder.add_node("chatbot", chatbot_node)
+    builder.add_node("tools", ToolNode(tools))
+    builder.add_node("translator", translator_node)
+
+    builder.add_edge(START, "chatbot")
+    builder.add_conditional_edges("chatbot", tools_condition, {"tools": "tools", END:"translator"})
+    builder.add_edge("tools", "chatbot")
+    builder.add_edge("translator", END)
+    graph = builder.compile()
+
+    display(Image(graph.get_graph().draw_mermaid_png()))
+
+    result = graph.invoke({"messages": [{"role": "user", "content": "In one sentence, what is special about a banana?"}]})
+    print(result["messages"][-1].content)
+    print(result["spanish"])
+
+if False:
+    memory = MemorySaver()
+
+builder = StateGraph(State)
 builder.add_node("chatbot", chatbot_node)
 builder.add_node("tools", ToolNode(tools))
 builder.add_node("translator", translator_node)
-
 builder.add_edge(START, "chatbot")
-builder.add_conditional_edges("chatbot", tools_condition, {"tools": "tools", END:"translator"})
-builder.add_edge("tools", "chatbot")
+builder.add_conditional_edges("chatbot", tools_condition, {"tools": "tools", END: "translator"})
 builder.add_edge("translator", END)
-graph = builder.compile()
+builder.add_edge("tools", "chatbot")
 
-display(Image(graph.get_graph().draw_mermaid_png()))
+if False:    
+    graph = builder.compile(checkpointer=memory)
+    config = {"configurable": {"thread_id": "conversation-1"}}
+    graph.invoke({"messages": [{"role": "user", "content": "Hi, my name is Ed."}]}, config)
+    second = graph.invoke({"messages": [{"role": "user", "content": "What is my name?"}]}, config)
+    print(second["messages"][-1].content)
+    print(second["spanish"])
 
-result = graph.invoke({"messages": [{"role": "user", "content": "In one sentence, what is special about a banana?"}]})
-print(result["messages"][-1].content)
-print(result["spanish"])
+
+with SqliteSaver.from_conn_string("memory.db") as sql_memory:
+    durable_graph = builder.compile(checkpointer=sql_memory)
+    sql_config = {"configurable": {"thread_id": "conversation-2"}}
+    durable_graph.invoke({"messages": [{"role": "user", "content": "Remember that my favorite color is orange."}]}, sql_config)
+    reply = durable_graph.invoke({"messages": [{"role": "user", "content": "What is my favorite color?"}]}, sql_config)
+    print(reply["messages"][-1].content)
+    print(reply["spanish"])
+
+#############################
+if False:
+    #state poking and going back in time...
+    #lets LangGraph applications recover and branch from any earlier point.
+    memory = MemorySaver()
+
+    graph = builder.compile(checkpointer=memory)
+    config = {"configurable": {"thread_id": "conversation-1"}}
+    graph.invoke({"messages": [{"role": "user", "content": "Hi, my name is Ed."}]}, config)
+    second = graph.invoke({"messages": [{"role": "user", "content": "What is my name?"}]}, config)
+    print(second["messages"][-1].content)
+    print(second["spanish"])
+    snapshot = graph.get_state(config)
+    messages = snapshot.values["messages"]
+    print("Messages stored so far:", len(messages))
+
+    for message in messages:
+        print(message.content)
+
+    history = list(graph.get_state_history(config))
+    print("Number of saved checkpoints:", len(history))
+
+    for h in reversed(history):            # history is newest first; reversed reads as a story
+        m = h.metadata
+        queued = ", ".join(t.name for t in h.tasks) or "(run complete)"
+        print(f"step {m['step']:>2}  {m['source']:<5}  messages={len(h.values.get('messages', []))}  about to run: {queued}")
+
+
+    # Time travel: take a checkpoint from earlier and resume the graph from that exact moment
+    earlier = history[len(history) // 2]
+    print("A checkpoint from earlier held", len(earlier.values["messages"]), "messages")
+
+    replay_config = {"configurable": {"thread_id": "conversation-1",
+                                    "checkpoint_id": earlier.config["configurable"]["checkpoint_id"]}}
+    resumed = graph.invoke(None, replay_config)
+    print("Resumed from the past; the graph now holds", len(resumed["messages"]), "messages")
+
+    again = graph.invoke({"messages": [{"role": "user", "content": "What do you know about me?"}]}, replay_config)
+    print(again["messages"][-1].content)
+    print(again["spanish"])
+
+#############################
+
+memory = MemorySaver()
+
+graph = builder.compile(checkpointer=memory)
+
+def chat(user_input: str, history):
+    config = {"configurable": {"thread_id": "gradio-session4"}}
+    result = graph.invoke({"messages": [{"role": "user", "content": user_input}]}, config)
+    return f"{result['messages'][-1].content}\n\n*{result['spanish']}*"
+
+gr.ChatInterface(chat).launch(share=True)
