@@ -29,7 +29,7 @@ researcher = create_deep_agent(
 
 brief = """
 Our company is planning to move its sales fleet to electric vehicles.
-Research the public EV charging landscape in the US: find out roughly how many public charging points there are,
+Research the public EV charging landscape in Portugal: find out roughly how many public charging points there are,
 and pick out two major charging networks a fleet could rely on.
 Write a one page markdown briefing, with a heading and a short section for each, to the file charging.md.
 """
