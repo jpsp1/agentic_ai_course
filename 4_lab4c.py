@@ -10,6 +10,8 @@ from deepagents.backends import FilesystemBackend
 from langchain_core.tools import tool
 from slide_kit import build_slide
 
+#NEW: skill example
+
 load_dotenv(override=True)
 
 search = GoogleSerperRun(api_wrapper=GoogleSerperAPIWrapper())
@@ -78,3 +80,7 @@ presenter = create_deep_agent(
     system_prompt="You prepare research for presentation by delegating to your slide-maker sub-agent.",
     backend=FilesystemBackend(root_dir=sandbox, virtual_mode=True),
 )
+
+result = presenter.invoke({"messages": [{"role": "user", "content":
+    "Read fleet.md and have a one-slide deck made of its recommendation."}]})
+print(result["messages"][-1].content)
