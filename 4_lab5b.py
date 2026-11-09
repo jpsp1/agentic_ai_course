@@ -52,5 +52,12 @@ async def main():
     print("The agent paused and is asking for approval:")
     print(interrupt.value["action_requests"][0]["description"])
 
+    #resumed = await approval_agent.ainvoke(Command(resume={"decisions": [{"type": "approve"}]}), config)
+    
+    resumed = await approval_agent.ainvoke(Command(resume={"decisions": [{"type": "reject", "message": "Rejected - no meetings on Fridays"}]}), config)
+
+
+    print(resumed["messages"][-1].content)
+
 if __name__ == "__main__":
     asyncio.run(main())
