@@ -20,6 +20,7 @@ from langgraph.types import Command
 
 from sidekick_tools import search, send_push_notification, wikipedia_lookup
 from sidekick import Sidekick
+import asyncio
 
 load_dotenv(override=True)
 
