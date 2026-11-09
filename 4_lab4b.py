@@ -17,22 +17,38 @@ os.makedirs(sandbox, exist_ok=True)
 
 model = ChatOpenAI(model="gpt-5.4-mini")
 
-researcher = create_deep_agent(
+
+research_ev_instructions = """
+You research one electric vehicle using the search tool and return three concise facts
+that a fleet buyer would care about, such as price, range and charging.
+"""
+
+overall_instructions = """
+You write comparison briefings for a company choosing electric vehicles for its sales fleet.
+For each vehicle, delegate the research to your vehicle-researcher sub-agent,
+then write a markdown comparison to a file, ending with a clear recommendation.
+"""
+
+
+research_subagent = {
+    "name": "vehicle-researcher",
+    "description": "Researches a single electric vehicle and returns a short list of facts about it.",
+    "system_prompt": research_ev_instructions,
+}
+
+lead = create_deep_agent(
     model=model,
     tools=[search],
-    system_prompt=(
-        "You are a research analyst. Plan your work with your todo tool, "
-        "research with the search tool, and write your findings as a tidy markdown briefing to a file."
-    ),
+    system_prompt=overall_instructions,
+    subagents=[research_subagent],
     backend=FilesystemBackend(root_dir=sandbox, virtual_mode=True),
 )
 
-brief = """
-Our company is planning to move its sales fleet to electric vehicles.
-Research the public EV charging landscape in Portugal: find out roughly how many public charging points there are,
-and pick out two major charging networks a fleet could rely on.
-Write a one page markdown briefing, with a heading and a short section for each, to the file charging.md.
+mission = """
+Compare the Tesla Model Y and the Ford Mustang Mach-E as candidates for our 100-car sales fleet.
+Research each vehicle, then write a short markdown comparison with a recommendation to fleet.md.
 """
 
-result = researcher.invoke({"messages": [{"role": "user", "content": brief}]})
+result = lead.invoke({"messages": [{"role": "user", "content": mission}]})
+
 print(result["messages"][-1].content)
