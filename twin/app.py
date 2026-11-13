@@ -1,3 +1,5 @@
+#From Edward Donner's 2026 course: AI Engineer Agentic Track: The Complete Agent & MCP Course 
+
 from openai import OpenAI
 from context import TWIN_SYSTEM_PROMPT
 from tools import tools, handle_tool_calls

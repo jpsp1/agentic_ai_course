@@ -1,3 +1,5 @@
+#From Edward Donner's 2026 course: AI Engineer Agentic Track: The Complete Agent & MCP Course 
+
 from dotenv import load_dotenv
 import requests
 import os

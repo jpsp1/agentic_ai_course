@@ -1,3 +1,4 @@
+#From Edward Donner's 2026 course: AI Engineer Agentic Track: The Complete Agent & MCP Course 
 from agents import Agent, function_tool, ModelSettings
 from messenger import send_email, push
 import os

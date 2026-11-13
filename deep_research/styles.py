@@ -1,3 +1,5 @@
+#From Edward Donner's 2026 course: AI Engineer Agentic Track: The Complete Agent & MCP Course 
+
 EXAMPLES = [
     "Most popular AI Agent frameworks in 2026",
     "Most commercially successful Agentic AI implementations in 2026",

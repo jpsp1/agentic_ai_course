@@ -1,3 +1,5 @@
+#From Edward Donner's 2026 course: AI Engineer Agentic Track: The Complete Agent & MCP Course 
+
 #derived from https://udemy.com/course/the-complete-agentic-ai-engineering-course/
 # If you don't know what any of these packages do - you can always ask ChatGPT for a guide!
 

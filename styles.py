@@ -1,3 +1,6 @@
+#From Edward Donner's 2026 course: AI Engineer Agentic Track: The Complete Agent & MCP Course 
+
+
 """Look and feel for the Sidekick app, using the course brand: navy text on light gray,
 blue as the working color, gold for moments that need the human, purple as a quiet accent.
 In Gradio 6, theme, css and js are passed to launch() rather than to gr.Blocks()."""

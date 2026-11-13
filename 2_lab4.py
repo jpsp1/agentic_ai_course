@@ -1,3 +1,5 @@
+#From Edward Donner's 2026 course: AI Engineer Agentic Track: The Complete Agent & MCP Course 
+
 from agents import Agent, WebSearchTool, trace, Runner, function_tool
 from agents.model_settings import ModelSettings
 from pydantic import BaseModel, Field

@@ -1,3 +1,4 @@
+#From Edward Donner's 2026 course: AI Engineer Agentic Track: The Complete Agent & MCP Course 
 """A tiny SQLite todo board: the shared substrate every Week 5 worker uses.
 
 A worker is handed one goal. To reach it, the worker writes its own step todos

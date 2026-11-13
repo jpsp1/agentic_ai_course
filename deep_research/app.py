@@ -1,3 +1,4 @@
+#From Edward Donner's 2026 course: AI Engineer Agentic Track: The Complete Agent & MCP Course 
 import gradio as gr
 from dotenv import load_dotenv
 from research_manager import ResearchManager

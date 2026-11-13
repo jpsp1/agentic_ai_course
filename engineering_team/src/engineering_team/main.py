@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+#From Edward Donner's 2026 course: AI Engineer Agentic Track: The Complete Agent & MCP Course 
+
 import sys
 import warnings
 from datetime import datetime

@@ -1,3 +1,4 @@
+#From Edward Donner's 2026 course: AI Engineer Agentic Track: The Complete Agent & MCP Course 
 """Turn down library chatter so the agent's own trace is easy to read.
 
 ADK prints a handful of [EXPERIMENTAL] feature notices, and google-genai logs a
@@ -13,3 +14,4 @@ import warnings
 def silence() -> None:
     warnings.filterwarnings("ignore", message=r".*\[EXPERIMENTAL\].*")
     logging.getLogger("google_genai._api_client").setLevel(logging.ERROR)
+

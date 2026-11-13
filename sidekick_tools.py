@@ -1,3 +1,5 @@
+#From Edward Donner's 2026 course: AI Engineer Agentic Track: The Complete Agent & MCP Course 
+
 """Tools for the Sidekick: a mix of MCP servers, ready-made LangChain tools and our own."""
 
 import asyncio

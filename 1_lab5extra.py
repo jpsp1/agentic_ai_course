@@ -1,3 +1,5 @@
+#From Edward Donner's 2026 course: AI Engineer Agentic Track: The Complete Agent & MCP Course 
+
 # Start with some imports - rich is a library for making formatted text output in the terminal
 
 from rich.console import Console
