@@ -68,7 +68,7 @@ board_agent = LlmAgent(
 
 
 
-workspace = Path("task_worker/workspace").resolve()   # the only folder the agent may touch
+workspace = Path("a2a_demo/task_worker/workspace").resolve()   # the only folder the agent may touch
 
 filesystem = McpToolset(
     connection_params=StdioConnectionParams(
